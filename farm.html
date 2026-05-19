@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farms Guide - Minecraft Java</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #2c2c2c;
+            --card-bg: #8b6914;
+            --primary: #5D8C3E;
+            --text-color: #e0e0e0;
+            --inner-bg: #1a1a1a;
+            --mc-btn: #8B8B8B;
+            --mc-btn-top: #C6C6C6;
+            --mc-btn-bottom: #555555;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #111;
+            background-image: url('https://www.transparenttextures.com/patterns/stone.png');
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            color: #fff;
+            background: linear-gradient(to bottom, #5D8C3E 50%, #8B5E3C 50%);
+            padding: 20px;
+            border: 4px solid #000;
+            box-shadow: inset -2px -4px 0 rgba(0,0,0,0.3), inset 2px 2px 0 rgba(255,255,255,0.1);
+            text-shadow: 3px 3px 0px #000;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            color: #aaa;
+            font-size: 10px;
+            margin-bottom: 20px;
+        }
+        
+        /* Category Buttons */
+        #categoryFilters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .cat-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            padding: 8px 12px;
+            background-color: var(--mc-btn);
+            border: 2px solid;
+            border-color: var(--mc-btn-top) var(--mc-btn-bottom) var(--mc-btn-bottom) var(--mc-btn-top);
+            color: #fff;
+            text-shadow: 1px 1px 0 #3b3b3b;
+            cursor: pointer;
+            outline: none;
+        }
+        .cat-btn:active, .cat-btn.active {
+            border-color: var(--mc-btn-bottom) var(--mc-btn-top) var(--mc-btn-top) var(--mc-btn-bottom);
+            background-color: #7a7a7a;
+        }
+
+        #searchBox {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 4px solid #000;
+            background-color: #555;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            box-sizing: border-box;
+            box-shadow: inset 2px 2px 0 rgba(0,0,0,0.5);
+        }
+        #searchBox::placeholder { color: #ccc; }
+
+        .farm-card {
+            background-color: var(--card-bg);
+            padding: 0;
+            margin-bottom: 20px;
+            border: 4px solid #000;
+            box-shadow: inset -2px -4px 0 rgba(0,0,0,0.4), inset 2px 2px 0 rgba(255,255,255,0.2);
+        }
+        .farm-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            cursor: pointer;
+        }
+        .farm-title-area { display: flex; flex-direction: column; gap: 5px; }
+        .farm-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: #fff;
+            text-shadow: 2px 2px 0px #000;
+            margin: 0;
+        }
+        .version-badge {
+            background-color: #1a1a1a;
+            color: #4CAF50;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            padding: 4px 6px;
+            border: 1px solid #4CAF50;
+            display: inline-block;
+            width: fit-content;
+        }
+        .farm-difficulty {
+            font-size: 12px;
+            color: #ffeb3b;
+            text-shadow: 1px 1px 0px #000;
+        }
+        
+        .farm-details {
+            display: none;
+            background-color: var(--inner-bg);
+            border-top: 4px solid #000;
+            padding: 15px;
+        }
+        .resources-box {
+            background-color: #c6a665;
+            border: 3px solid #000;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3);
+            position: relative;
+        }
+        .resources-box h3 {
+            font-family: 'Press Start 2P', cursive;
+            color: #3b2a08;
+            font-size: 12px;
+            margin-top: 0;
+            text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        /* Copy Button */
+        .copy-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            background: #5D8C3E;
+            border: 2px solid #000;
+            color: #fff;
+            padding: 4px 8px;
+            cursor: pointer;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .copy-btn:active { transform: translate(1px, 1px); }
+
+        /* Checklist */
+        .resource-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .resource-list li {
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px dashed #555;
+            font-size: 14px;
+            color: #000;
+            font-weight: bold;
+            gap: 8px;
+        }
+        .resource-list li input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #5D8C3E;
+            cursor: pointer;
+        }
+        .resource-list li.checked-item .res-text {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        .res-icon { font-size: 18px; }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #333;
+            border: 2px solid #000;
+            margin-top: 10px;
+            height: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .steps-box h3 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--primary);
+            font-size: 12px;
+            text-shadow: 2px 2px 0px #000;
+        }
+        .step {
+            background-color: #222;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-right: 4px solid var(--primary);
+            border: 2px solid #444;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .step strong { color: #fff; }
+    </style>
+</head>
+<body>
+
+    <h1>⛏️ فارمات الجافا</h1>
+    <p class="subtitle">اختر الفارم وابدأ البناء!</p>
+
+    <div id="categoryFilters">
+        <button class="cat-btn active" onclick="filterByCategory('all')">الكل</button>
+        <button class="cat-btn" onclick="filterByCategory('Mobs')">وحوش</button>
+        <button class="cat-btn" onclick="filterByCategory('Crops')">زراعة</button>
+        <button class="cat-btn" onclick="filterByCategory('Blocks')">بلوكات</button>
+        <button class="cat-btn" onclick="filterByCategory('XP')">إكس بي</button>
+    </div>
+
+    <input type="text" id="searchBox" placeholder="ابحث عن فارم..." oninput="renderFarms()">
+
+    <div id="farmsContainer"></div>
+
+    <script>
+        const farmsData = [
+            {
+                name: "فارم الحديد (Iron Farm)",
+                difficulty: "متوسط",
+                category: "Mobs",
+                version: "1.19+",
+                keywords: "حديد iron جولم قروني",
+                resources: [
+                    { text: "3 قرويين (Villagers)", icon: "👨‍🌾" },
+                    { text: "3 أسرّة (Beds)", icon: "🛏️" },
+                    { text: "3 محطات عمل - برميل (Barrels)", icon: "🪵" },
+                    { text: "1 زومبي - مع عقدة اسم", icon: "🧟" },
+                    { text: "10 كتل بناء", icon: "🧱" },
+                    { text: "8 سلالم (Slabs)", icon: "🪨" },
+                    { text: "2 دلاء ماء", icon: "🪣" },
+                    { text: "4 هوبرز + 2 صناديق", icon: "📦" },
+                    { text: "1 دلو لافا", icon: "🔥" }
+                ],
+                steps: [
+                    "ابني منصة في الهواء ارتفاع 10 بلوكات من الأرض.",
+                    "في منتصف المنصة، ابني غرفة (1x1) وحط الزومبي جواها وقفله.",
+                    "حط 3 سلالم (Slabs) على سقف غرفة الزومبي.",
+                    "على مسافة 3 بلوكات من الزومبي، اعمل مكان للقروي وحط سرير ومحطة عمل، وخلي القروي يدخل وقفله.",
+                    "ابني ممر من الماء يبدأ من حواف المنصة وينتهي في النص فوق الهوبرز.",
+                    "حط اللافا بلوك واحد ظاهر في مكان وقف الجولم.",
+                    "القرويين هيتخوفوا وهينتجوا جولم حديد، الماء هيدفعه لللافا والهوبرز هيجمع الحديد!"
+                ]
+            },
+            {
+                name: "فارم قصب السكر (Sugar Cane Farm)",
+                difficulty: "سهل",
+                category: "Crops",
+                version: "1.16+",
+                keywords: "سكر sugar cane قصب",
+                resources: [
+                    { text: "8 بذور قصب سكر", icon: "🌱" },
+                    { text: "8 كتل تراب/رمل", icon: "🟫" },
+                    { text: "8 مراقبون (Observers)", icon: "👁️" },
+                    { text: "8 مكابس (Pistons)", icon: "🔧" },
+                    { text: "8 غبار ريدستون", icon: "🔴" },
+                    { text: "8 دلاء ماء", icon: "🪣" },
+                    { text: "1 عربية هوبر + تراك + صندوق", icon: "🛒" },
+                    { text: "64 كتل بناء", icon: "🧱" }
+                ],
+                steps: [
+                    "احفر خندق طوله 8 بلوكات وحط الماء في أوله وآخره.",
+                    "جنب الماء، حط كتل التراب وزرع فوقهم القصب.",
+                    "ورا القصب بالظبط، حط المراقب (Observer) وشه للقصب، ووراه المكبس.",
+                    "لما القصب يكبر، المراقب هيشغله المكبس ويكسره.",
+                    "تحت مكان السقوط، حط التراك وعربية الهوبر عشان تجمع القصب في الصندوق."
+                ]
+            },
+            {
+                name: "فارم الكريبر (Creeper Farm)",
+                difficulty: "متقدم",
+                category: "Mobs",
+                version: "1.19+",
+                keywords: "كريبر creeper باريل بطاريات",
+                resources: [
+                    { text: "256+ كتل بناء", icon: "🧱" },
+                    { text: "64 باب فخي (Trapdoors)", icon: "🚪" },
+                    { text: "32 كتل ماء", icon: "💧" },
+                    { text: "16 هوبر + 4 صناديق", icon: "📦" },
+                    { text: "1 دلو لافا", icon: "🔥" },
+                    { text: "4 قطط (Cats)", icon: "🐱" },
+                    { text: "64 ألواح (Slabs)", icon: "🪨" }
+                ],
+                steps: [
+                    "ابني البرج عالياً جداً (فوق السحاب Y=150).",
+                    "ابني منصات توليد والسقف ارتفاع 2 بلوك بس.",
+                    "حط الأبواب الفخية على الجدران عشان الكريبر يقع.",
+                    "حط القطط عشان تخوف الكريبر فيمشي ورا الماء.",
+                    "اعمل ممرات ماء بتجرى للافا.",
+                    "الكريبر هيحترق والبارود هيوقع في الصناديق!"
+                ]
+            },
+            {
+                name: "فارم الغارات (Raid Farm)",
+                difficulty: "متقدم",
+                category: "Mobs",
+                version: "1.19+",
+                keywords: "غارات raid بيليجر توتم",
+                resources: [
+                    { text: "1 بيليجر شايل الراية", icon: "🏴" },
+                    { text: "1 سرير + 1 محطة عمل", icon: "🛏️" },
+                    { text: "1 دلو لافا", icon: "🔥" },
+                    { text: "4 دواسات ضغط خشبية", icon: "🪵" },
+                    { text: "8 هوبرز + 2 صناديق", icon: "📦" },
+                    { text: "64+ كتل بناء", icon: "🧱" },
+                    { text: "2 دلاء ماء", icon: "🪣" }
+                ],
+                steps: [
+                    "ابني منصة عالية فوق المحيط.",
+                    "تحت المنصة حط السرير والمحطة عمل (عشان تسجل القرية).",
+                    "اقتل البيليجر شايل الراية عشان تاخد التأثير (Bad Omen).",
+                    "ابني قاعة القتل: ممر ماء ونهايته دواسات ضغط فوق اللافا.",
+                    "البيليجرز هيحترقوا والهوبرز يجمع الغنايم.",
+                    "خلي بيليجر واحد حي في قارب بعيد عشان الغارة ماتخلصش (Infinite Raid)."
+                ]
+            },
+            {
+                name: "فارم السليم (Slime Farm)",
+                difficulty: "متوسط",
+                category: "Mobs",
+                version: "1.18+",
+                keywords: "سليم slime سلايم كرة",
+                resources: [
+                    { text: "200+ كتل بناء", icon: "🧱" },
+                    { text: "100 ألواح (Slabs)", icon: "🪨" },
+                    { text: "10 دلاء ماء", icon: "🪣" },
+                    { text: "20 كتل ماجما (Magma Blocks)", icon: "🟠" },
+                    { text: "4 عربيات هوبر + تراك", icon: "🛒" },
+                    { text: "4 هوبرز + 2 صناديق", icon: "📦" }
+                ],
+                steps: [
+                    "لازم تلاقي (Slime Chunk) أو في السوامب.",
+                    "ابني غرفة تفريغ ضخمة واحفر كل حاجة جواها.",
+                    "حط الألواح (Slabs) على كل الأرضية عشان تمنع وحوش تانية.",
+                    "في السقف، ابني ممرات ماء بتدفع السليم لفتحة النص.",
+                    "تحت الفتحة، حط كتل الماجما (السليم هيموت عليها).",
+                    "تحت الماجما، حط التراك وعربيات الهوبر عشان تمتص الكرات."
+                ]
+            },
+            {
+                name: "فارم الذهب والخوذ (Gold Farm)",
+                difficulty: "متقدم",
+                category: "Mobs",
+                version: "1.16+",
+                keywords: "ذهب gold بيجلينز piglin",
+                resources: [
+                    { text: "200+ أوبسيديان أو لافا وماء", icon: "🟣" },
+                    { text: "64 باب فخي", icon: "🚪" },
+                    { text: "100+ كتل بناء", icon: "🧱" },
+                    { text: "20 ألواح", icon: "🪨" },
+                    { text: "4 عربيات هوبر + تراك + صناديق", icon: "🛒" },
+                    { text: "1 دلو لافا", icon: "🔥" }
+                ],
+                steps: [
+                    "في النذر (Nether)، قف على Y=30 وابني بوابات أوبسيديان طويلة وقفلها.",
+                    "حط الأبواب الفخية على الحواف عشان البيجلينز يقعوا.",
+                    "اعمل ممر سقوط طويل (200 بلوك) عشان يموتوا بالضربة.",
+                    "في الآخر، حط سقف ارتفاع 1 بلوك ومكان للافا يقتل الناجي.",
+                    "عربيات الهوبر هتجمع الذهب، وأنت اضرب اللي بقي بالسيف عشان تجمع الخوذ واللآلئ."
+                ]
+            },
+            {
+                name: "فارم الحصى والبازلت (Cobble/Basalt)",
+                difficulty: "سهل",
+                category: "Blocks",
+                version: "1.17+",
+                keywords: "حصى بازلت cobblestone basalt حجارة",
+                resources: [
+                    { text: "1 مكبس (Piston)", icon: "🔧" },
+                    { text: "1 مراقب (Observer)", icon: "👁️" },
+                    { text: "1 دلو لافا", icon: "🔥" },
+                    { text: "1 دلو ماء أو جليد أزرق", icon: "🪣" },
+                    { text: "2 هوبرز + 1 صندوق", icon: "📦" },
+                    { text: "10 كتل بناء", icon: "🧱" }
+                ],
+                steps: [
+                    "احفر حفرة وحط الهوبرز والصندوق تحتها.",
+                    "على جانب، حط الماء (أو الجليد الأزرق للبازلت).",
+                    "على الجانب الآخر، حط اللافا.",
+                    "ورا المكان اللي هيولد فيه البلوك، حط المراقب وشه للبلوك.",
+                    "ورا المراقب حط المكبس.",
+                    "لما البلوك يتولد، المكبس هيكسره ويقع في الهوبر!"
+                ]
+            },
+            {
+                name: "فارم البطاطس/القمح (Crop Farm)",
+                difficulty: "سهل",
+                category: "Crops",
+                version: "1.14+",
+                keywords: "بطاطس قمح wheat potato فلاح",
+                resources: [
+                    { text: "1 قروي فلاح (Farmer)", icon: "👨‍🌾" },
+                    { text: "1 سرير + 1 مكبس سماد (Composter)", icon: "🛏️" },
+                    { text: "1 عربية هوبر + تراك + صندوق", icon: "🛒" },
+                    { text: "64 كتل تراب محرث (Farmland)", icon: "🟫" },
+                    { text: "8 دلاء ماء", icon: "🪣" },
+                    { text: "بذور بطاطس أو قمح", icon: "🌱" }
+                ],
+                steps: [
+                    "حرث الأرض بمساحة كبيرة وحط الماء في النص.",
+                    "ازرع الأرض كلها بالبطاطس أو القمح.",
+                    "في الأطراف، حط المكبس والسرير.",
+                    "هات القروي وخليه ياخد مهنة الفلاح وحبسه.",
+                    "القروي هيزرع ويحصد، ولما يمتلئ هيحط البطاطس في المكبس.",
+                    "عربية الهوبر تحت المكبس هتسحب البطاطس وتنزلها في الصندوق بتاعك!"
+                ]
+            },
+            {
+                name: "فارم الإكس بي (Spawner XP Farm)",
+                difficulty: "سهل",
+                category: "XP",
+                version: "1.17+",
+                keywords: "اكس بي xp سباونر زومبي",
+                resources: [
+                    { text: "1 سباونر زومبي/سكيليتون", icon: "🦴" },
+                    { text: "2 دلاء ماء", icon: "🪣" },
+                    { text: "1 لوح أو باب فخي", icon: "🪵" },
+                    { text: "10 كتل بناء", icon: "🧱" },
+                    { text: "2 هوبرز + 1 صندوق", icon: "📦" },
+                    { text: "1 دلو لافا", icon: "🔥" }
+                ],
+                steps: [
+                    "ضوء المكان وحط مشاعل على السباونر وأنت بتبني.",
+                    "احفر تحت السباونر بلوكين واعمل ممر ماء بتدفق.",
+                    "حط اللوح عشان الماء يعدى بس الوحوش تقف.",
+                    "احفر حفرة عمقها 22 بلوك (عشان الوحش يتبقى له نص قلب).",
+                    "في الآخر، اعمل غرفة تقف فيها وحط الهوبرز تحت رجل الوحش.",
+                    "حط اللافا بلوك محمي، واقعد اضرب الوحوش واجمع الإكس بي!"
+                ]
+            },
+            {
+                name: "فارم الصوف (Wool Farm)",
+                difficulty: "متوسط",
+                category: "Crops",
+                version: "1.18+",
+                keywords: "صوف wool خروف",
+                resources: [
+                    { text: "12 خروف من نفس اللون", icon: "🐑" },
+                    { text: "12 عشب (Grass Blocks)", icon: "🟩" },
+                    { text: "12 مراقبون (Observers)", icon: "👁️" },
+                    { text: "12 مكابس توزيع (Dispensers)", icon: "🔫" },
+                    { text: "12 مقصات (Shears)", icon: "✂️" },
+                    { text: "12 عربيات هوبر + تراك + صناديق", icon: "🛒" },
+                    { text: "64 كتل بناء", icon: "🧱" }
+                ],
+                steps: [
+                    "ابني صف من العشب، وتحته التراك وعربيات الهوبر.",
+                    "حط كل خروف على بلوك عشب واقفله من فوق (رجلين على العشب عشان ياكل).",
+                    "ورا الخروف، حط المكبس (Dispenser) ووجهه له وحط جواه المقصات.",
+                    "ورا المكبس حط المراقب (Observer) يكشف على الخروف.",
+                    "لما الخروف ياكل العشب، الصوف هينمو والمراقب هيشغل المكبس يقصه.",
+                    "الصوف هيعدي من خلال العشب ويقع في عربية الهوبر!"
+                ]
+            }
+        ];
+
+        let currentCategory = "all";
+
+        function filterByCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.innerText === getCategoryArabic(category) || (category === 'all' && btn.innerText === 'الكل')) {
+                    btn.classList.add('active');
+                }
+            });
+            renderFarms();
+        }
+
+        function getCategoryArabic(cat) {
+            switch(cat) {
+                case 'Mobs': return 'وحوش';
+                case 'Crops': return 'زراعة';
+                case 'Blocks': return 'بلوكات';
+                case 'XP': return 'إكس بي';
+                default: return 'الكل';
+            }
+        }
+
+        function renderFarms() {
+            const container = document.getElementById("farmsContainer");
+            const searchVal = document.getElementById("searchBox").value.toLowerCase();
+            container.innerHTML = "";
+
+            const filteredFarms = farmsData.filter(farm => {
+                const matchCategory = currentCategory === "all" || farm.category === currentCategory;
+                const matchSearch = farm.name.toLowerCase().includes(searchVal) || farm.keywords.includes(searchVal);
+                return matchCategory && matchSearch;
+            });
+
+            if(filteredFarms.length === 0) {
+                container.innerHTML = "<p style='text-align:center; font-family: Press Start 2P; color: #ff5555; margin-top:50px;'>مفيش فارمات بالاسم ده!</p>";
+                return;
+            }
+
+            filteredFarms.forEach((farm, index) => {
+                const card = document.createElement("div");
+                card.className = "farm-card";
+                
+                let resourcesHTML = farm.resources.map((res, resIdx) => `
+                    <li id="res-${index}-${resIdx}">
+                        <input type="checkbox" onchange="toggleCheck(this, ${index}, ${resIdx})">
+                        <span class="res-icon">${res.icon}</span>
+                        <span class="res-text">${res.text}</span>
+                    </li>
+                `).join("");
+
+                let stepsHTML = farm.steps.map((step, i) => `<div class="step"><strong>الخطوة ${i+1}:</strong> ${step}</div>`).join("");
+
+                card.innerHTML = `
+                    <div class="farm-header" onclick="toggleDetails(${index})">
+                        <div class="farm-title-area">
+                            <div class="farm-title">${farm.name}</div>
+                            <span class="version-badge">Java ${farm.version}</span>
+                        </div>
+                        <div class="farm-difficulty">الصعوبة: ${farm.difficulty}</div>
+                    </div>
+                    <div class="farm-details" id="details-${index}">
+                        <div class="resources-box">
+                            <h3>
+                                📦 الموارد المطلوبة
+                                <button class="copy-btn" onclick="copyResources(${index}, event)">📋 نسخ</button>
+                            </h3>
+                            <div class="progress-container">
+                                <div class="progress-bar" id="progress-${index}"></div>
+                            </div>
+                            <ul class="resource-list">${resourcesHTML}</ul>
+                        </div>
+                        <div class="steps-box">
+                            <h3>🛠️ طريقة البناء:</h3>
+                            ${stepsHTML}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function toggleDetails(index) {
+            const details = document.getElementById(`details-${index}`);
+            details.style.display = details.style.display === "block" ? "none" : "block";
+        }
+
+        function toggleCheck(checkbox, farmIdx, resIdx) {
+            const listItem = checkbox.parentElement;
+            if (checkbox.checked) {
+                listItem.classList.add("checked-item");
+            } else {
+                listItem.classList.remove("checked-item");
+            }
+            updateProgress(farmIdx);
+        }
+
+        function updateProgress(farmIdx) {
+            const farmCard = document.getElementById(`details-${farmIdx}`);
+            const totalResources = farmCard.querySelectorAll('.resource-list li').length;
+            const checkedResources = farmCard.querySelectorAll('.resource-list li.checked-item').length;
+            const progressBar = document.getElementById(`progress-${farmIdx}`);
+            
+            const percentage = (checkedResources / totalResources) * 100;
+            progressBar.style.width = percentage + "%";
+            
+            if(percentage === 100) {
+                progressBar.style.backgroundColor = "#ffeb3b";
+            } else {
+                progressBar.style.backgroundColor = "#4CAF50";
+            }
+        }
+
+        // === FIX: The New Copy Function (Works on Local Files) ===
+        function copyResources(farmIdx, event) {
+            event.stopPropagation(); // Prevent toggling the card
+            
+            // If the card is closed, open it first
+            const details = document.getElementById(`details-${farmIdx}`);
+            if(details.style.display !== "block") {
+                details.style.display = "block";
+            }
+
+            const farm = farmsData[farmIdx];
+            let textToCopy = `📦 الموارد لـ ${farm.name} (Java ${farm.version}):\n\n`;
+            farm.resources.forEach(res => {
+                textToCopy += `- ${res.text}\n`;
+            });
+
+            const btn = event.target;
+
+            // Try modern API first, if it fails (due to local file security), use the fallback
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showCopySuccess(btn);
+                }).catch(() => {
+                    fallbackCopyTextToClipboard(textToCopy, btn);
+                });
+            } else {
+                fallbackCopyTextToClipboard(textToCopy, btn);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Make it invisible and out of the way
+            textArea.style.position = "fixed";
+            textArea.style.top = "-1000px";
+            textArea.style.left = "-1000px";
+            textArea.style.opacity = "0";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopySuccess(btn);
+                } else {
+                    btn.innerText = "فشل النسخ ❌";
+                    setTimeout(() => { btn.innerText = "📋 نسخ"; }, 2000);
+                }
+            } catch (err) {
+                btn.innerText = "فشل النسخ ❌";
+                setTimeout(() => { btn.innerText = "📋 نسخ"; }, 2000);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showCopySuccess(btn) {
+            btn.innerText = "تم النسخ! ✅";
+            setTimeout(() => { btn.innerText = "📋 نسخ"; }, 2000);
+        }
+
+        renderFarms();
+    </script>
+</body>
+</html>
